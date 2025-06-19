@@ -164,7 +164,7 @@
     const myAudio = document.getElementById('myAudio');
 
     playMusicBtn.addEventListener('click', () => {
-      myAudio.volume = 0.5;
+      myAudio.volume = 0.5; // ตั้งค่าระดับเสียงก่อนเล่น
       myAudio.play().then(() => {
         playMusicBtn.style.display = 'none';
       });
