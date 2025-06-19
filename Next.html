@@ -164,8 +164,8 @@
     const myAudio = document.getElementById('myAudio');
 
     playMusicBtn.addEventListener('click', () => {
-      myAudio.play().then(() => {
       myAudio.volume = 0.5;
+      myAudio.play().then(() => {
         playMusicBtn.style.display = 'none';
       });
     });
