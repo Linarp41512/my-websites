@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>มาดูหน้านี้กัน</title>
+  <style>
+    body {
+      background: #fff0f5;
+      font-family: 'Kanit', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      overflow: hidden;
+      transition: opacity 0.8s ease; /* เอฟเฟกต์ fade */
+    }
+
+    body.fade-out {
+      opacity: 0;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #e91e63;
+      margin: 20px;
+    }
+
+    .slideshow-container {
+      max-width: 100%;
+      position: relative;
+      margin: auto;
+      height: 60vh;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide img, .slide video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: floatUp 6s linear infinite;
+      z-index: 2;
+    }
+
+    .heart::before, .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before { top: -10px; left: 0; }
+    .heart::after { left: -10px; top: 0; }
+
+    @keyframes floatUp {
+      0% { bottom: -50px; opacity: 0; }
+      50% { opacity: 1; }
+      100% { bottom: 100%; opacity: 0; }
+    }
+
+    #playMusicBtn, #nextPageBtn {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      margin: 20px 10px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+      color: white;
+    }
+
+    #playMusicBtn {
+      background-color: #e91e63;
+    }
+
+    #playMusicBtn:hover {
+      background-color: #c2185b;
+    }
+
+    #nextPageBtn {
+      background-color: #2196f3;
+    }
+
+    #nextPageBtn:hover {
+      background-color: #1565c0;
+    }
+  </style>
+</head>
+<body>
+  <h1>เย้! ดีใจที่สุดเลย 🥰<br>เราจะดูแลเธออย่างดีที่สุดนะ 💕</h1>
+
+  <!-- ปุ่มเล่นเพลงและเปลี่ยนหน้า -->
+  <button id="playMusicBtn">กดเพื่อเล่นเพลง 🎵</button>
+  <button id="nextPageBtn">ไปหน้าต่อไป ➡️</button>
+
+  <!-- สไลด์โชว์ -->
+  <div class="slideshow-container">
+    <div class="slide"><img src="pic1.jpg" alt="รูปที่ 1"></div>
+    <div class="slide"><img src="pic2.jpg" alt="รูปที่ 2"></div>
+    <div class="slide"><img src="pic3.jpg" alt="รูปที่ 3"></div>
+    <div class="slide"><img src="pic4.jpg" alt="รูปที่ 4"></div>
+    <div class="slide"><img src="pic5.jpg" alt="รูปที่ 5"></div>
+    <div class="slide"><img src="pic6.jpg" alt="รูปที่ 6"></div>
+  </div>
+
+  <!-- เพลง -->
+  <audio id="myAudio" loop>
+    <source src="รอยยิ้ม.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // สไลด์อัตโนมัติ
+    let slideIndex = 0;
+    const slides = document.getElementsByClassName("slide");
+    showSlides();
+
+    function showSlides() {
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+        if (slides[i].querySelector('video')) {
+          slides[i].querySelector('video').pause();
+        }
+      }
+      slideIndex++;
+      if (slideIndex > slides.length) { slideIndex = 1; }
+      slides[slideIndex - 1].style.display = "block";
+
+      const current = slides[slideIndex - 1];
+      const vid = current.querySelector('video');
+      if (vid) vid.play();
+
+      setTimeout(showSlides, 5000);
+    }
+
+    // หัวใจลอย
+    for (let i = 0; i < 20; i++) {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDelay = Math.random() * 6 + 's';
+      heart.style.opacity = Math.random();
+      heart.style.transform = `scale(${Math.random() * 0.8 + 0.5}) rotate(45deg)`;
+      document.body.appendChild(heart);
+    }
+
+    // เล่นเพลง
+    const playMusicBtn = document.getElementById('playMusicBtn');
+    const myAudio = document.getElementById('myAudio');
+
+    playMusicBtn.addEventListener('click', () => {
+      myAudio.play().then(() => {
+      myAudio.volume = 0.2;
+        playMusicBtn.style.display = 'none';
+      });
+    });
+
+    // ปุ่มเปลี่ยนหน้าพร้อม fade effect
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    nextPageBtn.addEventListener('click', () => {
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = 'Ans.html'; // เปลี่ยนเป็นชื่อหน้าถัดไปของคุณ
+      }, 800);
+    });
+  </script>
+</body>
+</html>

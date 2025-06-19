@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ตอบคำถามน่ารัก ๆ 💕</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: #fff0f5;
+      padding: 30px;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    .quiz-container {
+      background-color: white;
+      max-width: 600px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 1;
+    }
+
+    .question {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .choice {
+      display: block;
+      margin: 12px 0;
+      font-size: 1.2em;
+      cursor: pointer;
+      text-align: left;
+      padding-left: 20px;
+    }
+
+    .choice input {
+      margin-right: 10px;
+    }
+
+    button {
+      margin-top: 20px;
+      font-size: 1.1em;
+      padding: 10px 25px;
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #c2185b;
+      transform: scale(1.05);
+    }
+
+    .thank-you {
+      font-size: 1.5em;
+      color: #e91e63;
+      padding: 30px 0;
+    }
+
+    .thank-you img {
+      max-width: 100%;
+      border-radius: 16px;
+      margin-top: 20px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Floating Hearts */
+    .floating-hearts {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .heart {
+      position: absolute;
+      color: #ff6fa3;
+      font-size: 24px;
+      animation: float 4s linear forwards;
+      opacity: 0.8;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- เพลงพื้นหลัง -->
+  <audio id="bgMusic" src="Loyyim.mp3" loop></audio>
+
+  <!-- Floating hearts container -->
+  <div class="floating-hearts" id="floatingHearts"></div>
+
+  <div class="quiz-container" id="quizBox">
+    <div class="question" id="questionText">กำลังโหลดคำถาม...</div>
+    <div id="choicesContainer"></div>
+    <button id="nextBtn" onclick="nextQuestion()">
+      ถัดไป <i class="fas fa-arrow-right"></i>
+    </button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        text: "1. ถ้าไปเดทครั้งแรก อยากไปที่ไหน?",
+        choices: ["ร้านขนมน่ารัก 🍰", "เชียงใหม่ 🌳", "ดูหนังด้วยกัน 🎬"]
+      },
+      {
+        text: "2. เวลาว่างชอบทำอะไร?",
+        choices: ["ฟังเพลง 🎵", "อ่านหนังสือ 📖", "นอนเล่นเฉย ๆ 😴"]
+      },
+      {
+        text: "3. สีที่ทำให้รู้สึกอบอุ่น?",
+        choices: ["ชมพูอ่อนๆ", "น้ำตาลอ่อนๆ", "ครีม"]
+      },
+      {
+        text: "4. ผลไม้โปรดของคุณคือ?",
+        choices: ["แอปเปิ้ล 🍎", "สตรอว์เบอร์รี 🍓", "องุ่น 🍇"]
+      },
+      {
+        text: "5. ถ้าได้ของขวัญ อยากได้อะไรที่สุด?",
+        choices: ["จดหมายน่ารัก 💌", "ขนมห่อใหญ่ 🍭", "กอดแน่น ๆ 🤗"]
+      },
+      {
+        text: "6. เป็นแฟนกันไหมคะ?",
+        choices: ["เป็น 💌", "เป็นแต่มีลูกอม 🍭", "เป็นแล้วก็กอดกัน 🤗"]
+      }
+    ];
+
+    let current = 0;
+
+    function renderQuestion() {
+      const q = questions[current];
+      document.getElementById('questionText').textContent = q.text;
+
+      const container = document.getElementById('choicesContainer');
+      container.innerHTML = "";
+      q.choices.forEach((choice, index) => {
+        const label = document.createElement('label');
+        label.className = 'choice';
+        label.innerHTML = `
+          <input type="radio" name="q${current}" value="${choice}">
+          ${choice}
+        `;
+        container.appendChild(label);
+      });
+    }
+
+    function nextQuestion() {
+      const selected = document.querySelector(`input[name="q${current}"]:checked`);
+      if (!selected) {
+        alert("กรุณาเลือกคำตอบก่อนนะ 💡");
+        return;
+      }
+
+      console.log(`ข้อที่ ${current + 1}: ${selected.value}`);
+
+      current++;
+      if (current < questions.length) {
+        renderQuestion();
+      } else {
+        document.getElementById('quizBox').innerHTML = `
+          <div class="thank-you">
+            <p>ขอบคุณนะคะที่ตอบคำถามนี้ 🥰<br>ขอให้เราอยู่ด้วยกันนานๆนะคะ 💖</p>
+            <img src="May.gif" alt="น่ารัก" />
+          </div>
+        `;
+        startHearts();
+      }
+    }
+
+    function startHearts() {
+      const container = document.getElementById("floatingHearts");
+
+      const heartInterval = setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "💕";
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+
+        container.appendChild(heart);
+
+        setTimeout(() => {
+          heart.remove();
+        }, 4000);
+      }, 300);
+
+      // หยุดปล่อยหัวใจหลัง 10 วินาที
+      setTimeout(() => {
+        clearInterval(heartInterval);
+      }, 10000000);
+    }
+
+    // รอฟังคลิกพื้นที่ว่างเพื่อเริ่มเล่นเพลง
+    document.addEventListener("DOMContentLoaded", () => {
+      const music = document.getElementById("bgMusic");
+
+      function playMusicOnce() {
+        music.play().catch(err => {
+          console.warn("ไม่สามารถเล่นเพลงได้:", err);
+        });
+        document.body.removeEventListener("click", playMusicOnce);
+      }
+
+      document.body.addEventListener("click", playMusicOnce);
+    });
+
+    // เริ่มคำถามแรก
+    renderQuestion();
+  </script>
+
+</body>
+</html>
