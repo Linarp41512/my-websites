@@ -165,7 +165,7 @@
 
     playMusicBtn.addEventListener('click', () => {
       myAudio.play().then(() => {
-      myAudio.voluume = 0.5;
+      myAudio.volume = 0.5;
         playMusicBtn.style.display = 'none';
       });
     });
