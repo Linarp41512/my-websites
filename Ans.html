@@ -230,6 +230,7 @@
 
       function playMusicOnce() {
         music.play().catch(err => {
+        music.volume = 0.2;
           console.warn("ไม่สามารถเล่นเพลงได้:", err);
         });
         document.body.removeEventListener("click", playMusicOnce);
